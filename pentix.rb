@@ -14,3 +14,7 @@ require 'figure'
 require 'glass'
 require 'status'
 require 'controls'
+require 'game'
+
+
+Game.new.show if $0 == __FILE__
