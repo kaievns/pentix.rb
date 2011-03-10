@@ -11,3 +11,4 @@ include Gosu
 
 require 'block'
 require 'figure'
+require 'glass'
