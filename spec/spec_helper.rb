@@ -8,20 +8,18 @@ $test_window = Window.new(100, 100, false)
 # Some pretty formatted matrixes handling helpers
 #
 module MatrixHelper
-  class << self
-    def str_to_matrix(str)
-      str.scan(/\s*\|(.+?)\|/).map do |line|
-        line[0].split('.').map{ |c| c != ' ' }
-      end
+  def str_to_matrix(str)
+    str.scan(/\s*\|(.+?)\|/).map do |line|
+      line[0].split('.').map{ |c| c != ' ' }
     end
+  end
 
-    def matrix_to_str(matrix)
-      "|#{
-        matrix.map do |row|
-          row.map{ |c| c ? 'x' : ' '}.join('')
-        end.join('|')
-      }|"
-    end
+  def matrix_to_str(matrix)
+    "|#{
+      matrix.map do |row|
+        row.map{ |c| c ? 'x' : ' '}.join('')
+      end.join('|')
+    }|"
   end
 end
 
@@ -29,11 +27,12 @@ end
 # Figures rendering matcher
 #
 RSpec::Matchers.define :render_blocks do |expected|
+  extend MatrixHelper
 
   match do |actual|
     block = actual.instance_variable_get('@block')
 
-    MatrixHelper.str_to_matrix(expected).each_with_index do |row, y|
+    str_to_matrix(expected).each_with_index do |row, y|
       row.each_with_index do |cell, x|
         block.send(
           cell ? :should_receive : :should_not_receive,
@@ -58,13 +57,14 @@ end
 # a readable matrix matcher
 #
 RSpec::Matchers.define :have_matrix do |expected|
+  extend MatrixHelper
 
   match do |actual|
-    actual.matrix == MatrixHelper.str_to_matrix(expected)
+    actual.matrix == str_to_matrix(expected)
   end
 
   failure_message_for_should do |actual|
-    "expected: #{MatrixHelper.matrix_to_str(actual.matrix)}\n" \
-    "     got: #{MatrixHelper.matrix_to_str(MatrixHelper.str_to_matrix(expected))}"
+    "expected: #{matrix_to_str(actual.matrix)}\n" \
+    "     got: #{matrix_to_str(str_to_matrix(expected))}"
   end
 end
