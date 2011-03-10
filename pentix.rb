@@ -10,3 +10,4 @@ require 'gosu'
 include Gosu
 
 require 'block'
+require 'figure'
