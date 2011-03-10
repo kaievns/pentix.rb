@@ -5,33 +5,66 @@ require File.join(File.dirname(__FILE__), '..', 'pentix.rb')
 $test_window = Window.new(100, 100, false)
 
 #
-# a readable matrix matcher
+# Some pretty formatted matrixes handling helpers
 #
-RSpec::Matchers.define :have_matrix do |expected|
-  def str_to_matrix(str)
-    str.scan(/\s*\|(.+?)\|/).map do |line|
-      line[0].split('.').map{ |c| c != ' ' }
+module MatrixHelper
+  class << self
+    def str_to_matrix(str)
+      str.scan(/\s*\|(.+?)\|/).map do |line|
+        line[0].split('.').map{ |c| c != ' ' }
+      end
+    end
+
+    def matrix_to_str(matrix)
+      "|#{
+        matrix.map do |row|
+          row.map{ |c| c ? 'x' : ' '}.join('')
+        end.join('|')
+      }|"
     end
   end
+end
 
-  def matrix_to_str(matrix)
-    "|#{
-      matrix.map do |row|
-        row.map{ |c| c ? 'x' : ' '}.join('')
-      end.join('|')
-    }|"
-  end
+#
+# Figures rendering matcher
+#
+RSpec::Matchers.define :render_blocks do |expected|
 
   match do |actual|
-    actual.matrix == str_to_matrix(expected)
+    block = actual.instance_variable_get('@block')
+
+    MatrixHelper.str_to_matrix(expected).each_with_index do |row, y|
+      row.each_with_index do |cell, x|
+        block.send(
+          cell ? :should_receive : :should_not_receive,
+          :draw
+        ).with(
+          actual.pos_x + block.size * x,
+          actual.pos_y + block.size * y
+        )
+      end
+    end
+
+    actual.draw
   end
 
   failure_message_for_should do |actual|
-    "expected: #{matrix_to_str(actual.matrix)}\n" \
-    "     got: #{matrix_to_str(str_to_matrix(expected))}"
+    "some blocks were misplaced during the rendering process"
+  end
+end
+
+
+#
+# a readable matrix matcher
+#
+RSpec::Matchers.define :have_matrix do |expected|
+
+  match do |actual|
+    actual.matrix == MatrixHelper.str_to_matrix(expected)
   end
 
-  description do
-    "have matrix: #{matrix_to_str(str_to_matrix(expected))}"
+  failure_message_for_should do |actual|
+    "expected: #{MatrixHelper.matrix_to_str(actual.matrix)}\n" \
+    "     got: #{MatrixHelper.matrix_to_str(MatrixHelper.str_to_matrix(expected))}"
   end
 end

@@ -43,6 +43,29 @@ describe Figure do
 
   end
 
+  describe "#draw" do
+
+    it "should correctly render the cross figure" do
+      Figure.new(@window, :cross).should render_blocks(%Q{
+        | . .x. . |
+        | .x.x.x. |
+        | . .x. . |
+        | . . . . |
+        | . . . . |
+      })
+    end
+
+    it "should correctly render the stairs figure" do
+      Figure.new(@window, :stairs).should render_blocks(%Q{
+        | .x. . . |
+        | .x.x. . |
+        | . .x.x. |
+        | . . . . |
+        | . . . . |
+      })
+    end
+  end
+
   describe "manipulations" do
     before :all do
       @figure = Figure.new(@window)

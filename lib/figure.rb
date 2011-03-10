@@ -20,8 +20,24 @@ class Figure
     @matrix = config.map{ |row| row.split('').map{ |char| char == 'x' }}
     @b_size = @block.size
     @window = window
+    @pos_x  = 0
+    @pos_y  = 0
 
     center!
+  end
+
+  def draw
+    INDEXES.each do |i|
+      INDEXES.each do |j|
+        if @matrix[i][j]
+          @block.draw(@pos_x + j * @b_size, @pos_y + i * @b_size)
+        end
+      end
+    end
+  end
+
+  def drop
+    @window.show_next_figure
   end
 
   def move_left
@@ -46,20 +62,6 @@ class Figure
     end
 
     center!
-  end
-
-  def drop
-    @window.show_next_figure
-  end
-
-  def draw
-    INDEXES.each do |i|
-      INDEXES.each do |j|
-        if @matrix[i][j]
-          @block.draw(@pos_x + j * @b_size, @pos_y + i * @b_size)
-        end
-      end
-    end
   end
 
   # centers the figure in the matrix and calculates the size
