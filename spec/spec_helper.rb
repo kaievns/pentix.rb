@@ -38,8 +38,8 @@ RSpec::Matchers.define :render_blocks do |expected|
           cell ? :should_receive : :should_not_receive,
           :draw
         ).with(
-          actual.pos_x + block.size * x,
-          actual.pos_y + block.size * y
+          actual.pos_x + x,
+          actual.pos_y + y
         )
       end
     end

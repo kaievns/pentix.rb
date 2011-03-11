@@ -1,6 +1,8 @@
 #
 # The main game window class
 #
+# NOTE: all the sizes in the code is _in_blocks_
+#
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Game < Window
@@ -8,11 +10,11 @@ class Game < Window
   attr_accessor :glass, :status
 
   def initialize
-    super(540, 540, false)
+    super(27 * Block::SIZE, 27 * Block::SIZE, false)
     self.caption = "Pentix"
 
-    @glass    = Glass.new(self,   20, 20)
-    @status   = Status.new(self, 320, 20)
+    @glass    = Glass.new(self,   1, 1) # in blocks!
+    @status   = Status.new(self, 16, 1)
 
     @controls = Controls.new(self)
 
@@ -46,8 +48,8 @@ class Game < Window
     @figure        = @status.figure || Figure.new(self)
     @status.figure = Figure.new(self)
 
-    @figure.pos_x  = 120 # top-center of the glass
-    @figure.pos_y  = 20
+    @figure.pos_x  = 6
+    @figure.pos_y  = 1
   end
 
 end

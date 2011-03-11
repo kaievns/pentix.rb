@@ -72,18 +72,18 @@ describe Figure do
     end
 
     describe "move left" do
-      it "should decrease the x-position by the block size" do
-        @figure.pos_x = 100
+      it "should decrease the x-position by 1" do
+        @figure.pos_x = 10
         @figure.move_left
-        @figure.pos_x.should == 100 - @block.size
+        @figure.pos_x.should == 9
       end
     end
 
     describe "move right" do
-      it "should increase the x-position by the block size" do
-        @figure.pos_x = 100
+      it "should increase the x-position by 1" do
+        @figure.pos_x = 10
         @figure.move_right
-        @figure.pos_x.should == 100 + @block.size
+        @figure.pos_x.should == 11
       end
     end
 

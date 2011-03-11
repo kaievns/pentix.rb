@@ -10,7 +10,7 @@ describe Status do
     @head_font = Font.new(*@head_font_args)
     @text_font = Font.new(*@text_font_args)
 
-    @status = Status.new(@window, 100, 200)
+    @status = Status.new(@window, 10, 20)
   end
 
   describe "initialization" do
@@ -18,12 +18,12 @@ describe Status do
       Font.should_receive(:new).with(*@head_font_args).and_return(@head_font)
       Font.should_receive(:new).with(*@text_font_args).and_return(@text_font)
 
-      @status = Status.new(@window, 100, 200)
+      @status = Status.new(@window, 10, 20)
     end
 
     it "should set correct positions" do
-      @status.pos_x.should == 100
-      @status.pos_y.should == 200
+      @status.pos_x.should == 10
+      @status.pos_y.should == 20
     end
 
     it "should set zero level" do
@@ -76,16 +76,16 @@ describe Status do
       Font.should_receive(:new).with(*@text_font_args).and_return(@text_font)
 
       @figure = Figure.new(@window)
-      @status = Status.new(@window, 100, 200)
+      @status = Status.new(@window, 10, 20)
       @status.figure = @figure
 
-      @figure.should_receive(:pos_x=).with(100)
-      @figure.should_receive(:pos_y=).with(240)
+      @figure.should_receive(:pos_x=).with(10)
+      @figure.should_receive(:pos_y=).with(22)
       @figure.should_receive(:draw)
 
-      @head_font.should_receive(:draw).with("Next:",    100, 195, 0, 1.0, 1.0, Status::HEAD_FONT[2])
-      @head_font.should_receive(:draw).with("Score:",   100, 375, 0, 1.0, 1.0, Status::HEAD_FONT[2])
-      @head_font.should_receive(:draw).with("Winnars:", 100, 555, 0, 1.0, 1.0, Status::HEAD_FONT[2])
+      @head_font.should_receive(:draw).with("Next:",    200, 395, 0, 1.0, 1.0, Status::HEAD_FONT[2])
+      @head_font.should_receive(:draw).with("Score:",   200, 575, 0, 1.0, 1.0, Status::HEAD_FONT[2])
+      @head_font.should_receive(:draw).with("Winnars:", 200, 755, 0, 1.0, 1.0, Status::HEAD_FONT[2])
 
       @status.draw
     end

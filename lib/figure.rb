@@ -18,7 +18,6 @@ class Figure
     @name   = name
     @block  = Block.new(window, COLORS[config.pop.to_sym])
     @matrix = config.map{ |row| row.split('').map{ |char| char == 'x' }}
-    @b_size = @block.size
     @window = window
     @pos_x  = 0
     @pos_y  = 0
@@ -30,7 +29,7 @@ class Figure
     INDEXES.each do |i|
       INDEXES.each do |j|
         if @matrix[i][j]
-          @block.draw(@pos_x + j * @b_size, @pos_y + i * @b_size)
+          @block.draw(@pos_x + j, @pos_y + i)
         end
       end
     end
@@ -41,11 +40,11 @@ class Figure
   end
 
   def move_left
-    @pos_x -= @b_size
+    @pos_x -= 1
   end
 
   def move_right
-    @pos_x += @b_size
+    @pos_x += 1
   end
 
   def turn_left

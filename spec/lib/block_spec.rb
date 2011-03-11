@@ -20,16 +20,12 @@ describe Block do
     Block.new(@window, Color::GREEN).color.should == Color::GREEN
   end
 
-  it "should provide with the block size" do
-    Block.new(@window, Color::WHITE).size.should == 20 # the size of the image
-  end
-
   it "should draw the block in the given position with assigned color" do
     @color = Color::BLUE
-    @pos_x = 100
-    @pos_y = 200
+    @pos_x = 10
+    @pos_y = 20
 
-    @image.should_receive(:draw).with(@pos_x, @pos_y, 0, 1.0, 1.0, @color)
+    @image.should_receive(:draw).with(@pos_x * Block::SIZE, @pos_y * Block::SIZE, 0, 1.0, 1.0, @color)
 
     Block.new(@window, @color).draw(@pos_x, @pos_y)
   end

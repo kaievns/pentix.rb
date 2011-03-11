@@ -4,7 +4,7 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Glass
-  WIDTH  = 12 # in blocks!
+  WIDTH  = 12
   HEIGHT = 24
   COLOR  = Color::GRAY
 
@@ -15,19 +15,18 @@ class Glass
 
     @pos_x  = x
     @pos_y  = y
-    @b_size = @block.size
   end
 
   def draw
     # drawing the walls
     (0..HEIGHT).each do |i|
-      @block.draw(@pos_x,  @pos_y + @b_size * i)
-      @block.draw(@pos_x + @b_size * (WIDTH + 1), @pos_y + @b_size * i)
+      @block.draw(@pos_x,  @pos_y + i)
+      @block.draw(@pos_x + WIDTH + 1, @pos_y + i)
     end
 
     # drawing the bottom
     (1..WIDTH).each do |i|
-      @block.draw(@pos_x + @b_size * i, @pos_y + @b_size * HEIGHT)
+      @block.draw(@pos_x + i, @pos_y + HEIGHT)
     end
   end
 end

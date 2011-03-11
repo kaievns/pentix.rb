@@ -6,14 +6,14 @@
 class Block
   attr_accessor :color, :size
 
+  SIZE = 20 # block size in pixels
+
   def initialize(window, color)
     @@img ||= Image.new(window, 'media/block.png', true)
-
     @color = color
-    @size  = @@img.width
   end
 
   def draw(x, y)
-    @@img.draw(x, y, 0, 1.0, 1.0, @color)
+    @@img.draw(x * SIZE, y * SIZE, 0, 1.0, 1.0, @color)
   end
 end
