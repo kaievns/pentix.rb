@@ -6,29 +6,31 @@ describe Figure do
     @block  = Block.new(@window, Color::WHITE)
   end
 
-  describe "constructor" do
+  describe "initialization" do
 
-    before :all do
-      @name  = :stairs
-      @color = Figure::COLORS[Figure::FIGURES[@name].split('|').last.to_sym]
+    describe "by name" do
+      before :all do
+        @name  = :stairs
+        @color = Figure::COLORS[Figure::FIGURES[@name].split('|').last.to_sym]
+        @figure = Figure.new(@window, @name)
+      end
 
-      Block.should_receive(:new).with(@window, @color).and_return(@block)
+      it "should assign the figure name" do
+        @figure.name.should == @name
+      end
 
-      @figure = Figure.new(@window, @name)
-    end
+      it "should set the right color" do
+        @figure.color.should == @color
+      end
 
-    it "should assign the figure name" do
-      @figure.name.should == @name
-    end
+      it "should assign a correct matrix" do
+        @figure.should have_matrix(%Q{
+          |x. . |
+          |x.x. |
+          | .x.x|
+        })
+      end
 
-    it "should assign a correct matrix" do
-      @figure.should have_matrix(%Q{
-        | .x. . . |
-        | .x.x. . |
-        | . .x.x. |
-        | . . . . |
-        | . . . . |
-      })
     end
 
     it "should instance random figures if called without a name" do
@@ -47,21 +49,17 @@ describe Figure do
 
     it "should correctly render the cross figure" do
       Figure.new(@window, :cross).should render_blocks(%Q{
-        | . .x. . |
-        | .x.x.x. |
-        | . .x. . |
-        | . . . . |
-        | . . . . |
+        | .x. |
+        |x.x.x|
+        | .x. |
       })
     end
 
     it "should correctly render the stairs figure" do
       Figure.new(@window, :stairs).should render_blocks(%Q{
-        | .x. . . |
-        | .x.x. . |
-        | . .x.x. |
-        | . . . . |
-        | . . . . |
+        |x. . |
+        |x.x. |
+        | .x.x|
       })
     end
   end
@@ -89,41 +87,33 @@ describe Figure do
 
     describe "rotate left" do
       before :all do
-        @figure = Figure.new(@window, :stairs)
+        @figure = Figure.new(@window, :l_crutch)
       end
 
       it "should rotate the matrix contr-clockwise" do
         @figure.turn_left
         @figure.should have_matrix(%Q{
-          | . . .x. |
-          | . .x.x. |
-          | .x.x. . |
-          | . . . . |
-          | . . . . |
+          | .x. . |
+          |x.x.x.x|
         })
         @figure.turn_left
         @figure.should have_matrix(%Q{
-          | .x.x. . |
-          | . .x.x. |
-          | . . .x. |
-          | . . . . |
-          | . . . . |
+          | .x|
+          | .x|
+          |x.x|
+          | .x|
         })
         @figure.turn_left
         @figure.should have_matrix(%Q{
-          | . .x.x. |
-          | .x.x. . |
-          | .x. . . |
-          | . . . . |
-          | . . . . |
+          |x.x.x.x|
+          | . .x. |
         })
         @figure.turn_left
         @figure.should have_matrix(%Q{
-          | .x. . . |
-          | .x.x. . |
-          | . .x.x. |
-          | . . . . |
-          | . . . . |
+          |x. |
+          |x.x|
+          |x. |
+          |x. |
         })
       end
     end
@@ -136,37 +126,44 @@ describe Figure do
       it "should rotate the matrix clockwise" do
         @figure.turn_right
         @figure.should have_matrix(%Q{
-          | . .x.x. |
-          | .x.x. . |
-          | .x. . . |
-          | . . . . |
-          | . . . . |
+          | .x.x|
+          |x.x. |
+          |x. . |
         })
         @figure.turn_right
         @figure.should have_matrix(%Q{
-          | .x.x. . |
-          | . .x.x. |
-          | . . .x. |
-          | . . . . |
-          | . . . . |
+          |x.x. |
+          | .x.x|
+          | . .x|
         })
         @figure.turn_right
         @figure.should have_matrix(%Q{
-          | . . .x. |
-          | . .x.x. |
-          | .x.x. . |
-          | . . . . |
-          | . . . . |
+          | . .x|
+          | .x.x|
+          |x.x. |
         })
         @figure.turn_right
         @figure.should have_matrix(%Q{
-          | .x. . . |
-          | .x.x. . |
-          | . .x.x. |
-          | . . . . |
-          | . . . . |
+          |x. . |
+          |x.x. |
+          | .x.x|
         })
       end
+    end
+  end
+
+  describe "#drop" do
+    before :all do
+      @figure = Figure.new(@window)
+      @result = @figure.drop
+    end
+
+    it "should return the @figure itself back" do
+      @result.should == @figure
+    end
+
+    it "should increase the vertical position by the glass height" do
+      @figure.pos_y.should == Glass::HEIGHT
     end
   end
 end

@@ -15,11 +15,38 @@ module MatrixHelper
   end
 
   def matrix_to_str(matrix)
-    "|#{
-      matrix.map do |row|
-        row.map{ |c| c ? 'x' : ' '}.join('')
-      end.join('|')
-    }|"
+    matrix.map do |row|
+      "|#{row.map{ |c| c ? 'x' : ' '}.join('.')}|"
+    end.join("\n          ")
+  end
+
+  def draw_matrix(figure)
+    block  = actual.instance_variable_get('@block')
+    matrix = figure.instance_variable_get('@matrix')
+    result = []
+    max_x  = 0
+
+    block.class.instance_eval do
+      define_method :draw do |x, y|
+        x = x - figure.pos_x
+        y = y - figure.pos_y
+
+        result[y]  ||= []
+        result[y][x] = true
+        max_x = x if max_x < x
+      end
+    end
+
+    figure.draw
+
+    # making the size of the rows even
+    result.map do |row|
+      (row || []).tap do |row|
+        (0..max_x).each do |x|
+          row[x] = false unless row[x]
+        end
+      end
+    end
   end
 end
 
@@ -30,25 +57,12 @@ RSpec::Matchers.define :render_blocks do |expected|
   extend MatrixHelper
 
   match do |actual|
-    block = actual.instance_variable_get('@block')
-
-    str_to_matrix(expected).each_with_index do |row, y|
-      row.each_with_index do |cell, x|
-        block.send(
-          cell ? :should_receive : :should_not_receive,
-          :draw
-        ).with(
-          actual.pos_x + x,
-          actual.pos_y + y
-        )
-      end
-    end
-
-    actual.draw
+    draw_matrix(actual) == str_to_matrix(expected)
   end
 
   failure_message_for_should do |actual|
-    "some blocks were misplaced during the rendering process"
+    "expected: #{matrix_to_str(str_to_matrix(expected))}\n\n" \
+    "     got: #{matrix_to_str(draw_matrix(actual))}"
   end
 end
 
@@ -64,7 +78,7 @@ RSpec::Matchers.define :have_matrix do |expected|
   end
 
   failure_message_for_should do |actual|
-    "expected: #{matrix_to_str(actual.matrix)}\n" \
-    "     got: #{matrix_to_str(str_to_matrix(expected))}"
+    "expected: #{matrix_to_str(str_to_matrix(expected))}\n\n" \
+    "     got: #{matrix_to_str(actual.matrix)}"
   end
 end

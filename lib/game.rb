@@ -48,7 +48,7 @@ class Game < Window
     @figure        = @status.figure || Figure.new(self)
     @status.figure = Figure.new(self)
 
-    @figure.pos_x  = 6
+    @figure.pos_x  = 2 + (Glass::WIDTH - @figure.size_x)/2
     @figure.pos_y  = 1
   end
 
