@@ -77,4 +77,18 @@ class Glass
       distance
     end.min
   end
+
+  def glue_in(figure)
+    (0..figure.size_x - 1).each do |x|
+      (0..figure.size_y-1).each do |y|
+        if figure.matrix[y][x]
+          @matrix[
+            y + figure.pos_y - @pos_y + figure.distance
+          ][
+            x + figure.pos_x - @pos_x
+          ] = figure.color
+        end
+      end
+    end
+  end
 end

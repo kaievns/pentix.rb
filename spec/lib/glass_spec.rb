@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/../spec_helper"
 
 describe Glass do
 
-  before :all do
+  before do
     @window = DummyWindow.new
     @glass  = Glass.new(@window, 1, 2)
     @window.glass = @glass
@@ -124,6 +124,120 @@ describe Glass do
         @glass.spaces_below(@figure).should == Glass::HEIGHT - @figure.size_y
       end
     end
+  end
+
+  describe "#glue_in" do
+    before do
+      @figure = Figure.new(@window, :stairs)
+    end
+
+    it "should glue the figure in when it's on top" do
+      @figure.move(@glass.pos_x + 2, @glass.pos_y)
+      @glass.glue_in(@figure)
+      @glass.should have_matrix(%Q{
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . .x. . . . . . . . . |
+        | . .x.x. . . . . . . . |
+        | . . .x.x. . . . . . . |
+      })
+    end
+
+    describe "with some blocks already in the glass" do
+      before do
+        figure = Figure.new(@window, :l_crutch)
+        figure.move(@glass.pos_x + 1, @glass.pos_y)
+        @glass.glue_in(figure)
+      end
+
+      it "should glue figures next to each other" do
+        @figure.move(@glass.pos_x + 6, @glass.pos_y + 6)
+        @glass.glue_in(@figure)
+
+        @glass.should have_matrix(%Q{
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | .x. . . . . . . . . . |
+          | .x.x. . . .x. . . . . |
+          | .x. . . . .x.x. . . . |
+          | .x. . . . . .x.x. . . |
+        })
+      end
+
+      it "should glue figures on top of each other" do
+        @figure.move(@glass.pos_x + 1, @glass.pos_y)
+        @glass.glue_in(@figure)
+
+        @figure.move(@glass.pos_x, @glass.pos_y)
+        @glass.glue_in(@figure)
+
+        @glass.should have_matrix(%Q{
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          |x. . . . . . . . . . . |
+          |x.x. . . . . . . . . . |
+          | .x.x. . . . . . . . . |
+          | .x. . . . . . . . . . |
+          | .x.x. . . . . . . . . |
+          | .x.x.x. . . . . . . . |
+          | .x.x. . . . . . . . . |
+          | .x. . . . . . . . . . |
+          | .x. . . . . . . . . . |
+        })
+      end
+    end
+
+
   end
 
 end
