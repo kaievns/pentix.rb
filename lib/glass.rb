@@ -19,6 +19,12 @@ class Glass
     reset!
   end
 
+  def reset!
+    @matrix = (0..HEIGHT-1).map do
+      Array.new(WIDTH)
+    end
+  end
+
   def draw
     @block.color = COLOR
 
@@ -44,10 +50,31 @@ class Glass
     end
   end
 
-  def reset!
-    @matrix = (0..HEIGHT-1).map do
-      Array.new(WIDTH)
-    end
-  end
+  def spaces_below(figure)
+    fig_x = figure.pos_x - @pos_x
+    fig_y = figure.pos_y - @pos_y
 
+    (0..figure.size_x-1).map do |x|
+      column_height = 0
+
+      figure.matrix.each_with_index do |row, y|
+        column_height = y + 1 if row[x]
+      end
+
+      lowest_point = fig_y + column_height
+
+      x += fig_x
+      distance = HEIGHT - lowest_point
+
+      # checking if it interescts with any existing blocks
+      @matrix.each_with_index do |row, y|
+        if nil != row[x]
+          distance = y - column_height
+          break
+        end
+      end
+
+      distance
+    end.min
+  end
 end
