@@ -3,8 +3,9 @@ require File.dirname(__FILE__) + "/../spec_helper"
 describe Glass do
 
   before :all do
-    @window = $test_window
+    @window = DummyWindow.new
     @glass  = Glass.new(@window, 1, 2)
+    @window.glass = @glass
   end
 
   describe "initialization" do

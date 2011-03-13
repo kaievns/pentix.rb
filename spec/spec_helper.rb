@@ -1,8 +1,20 @@
 require 'rspec'
 require File.join(File.dirname(__FILE__), '..', 'pentix.rb')
 
-# need a single global test-window
-$test_window = Window.new(100, 100, false)
+# a dummy window class to test the modules separately from the main game
+class DummyWindow < Gosu::Window
+  attr_accessor :glass, :status
+
+  # converting `.new` into a singleton to avoid memory leaks in Gosu
+  def self.new
+    @@win ||= super
+  end
+
+  def initialize
+    super(100, 100, false)
+  end
+
+end
 
 #
 # Some pretty formatted matrixes handling helpers

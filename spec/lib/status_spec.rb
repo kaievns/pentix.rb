@@ -2,7 +2,8 @@ require File.dirname(__FILE__) + "/../spec_helper"
 
 describe Status do
   before :all do
-    @window = $test_window
+    @window = DummyWindow.new
+    @window.glass = Glass.new(@window, 1, 1)
 
     @head_font_args = [@window, Status::HEAD_FONT[0], Status::HEAD_FONT[1]]
     @text_font_args = [@window, Status::TEXT_FONT[0], Status::TEXT_FONT[1]]

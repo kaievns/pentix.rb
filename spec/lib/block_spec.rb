@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + "/../spec_helper"
 
 describe Block do
   before :all do
-    @window = $test_window
+    @window = DummyWindow.new
     @i_args = [@window, 'media/block.png', true]
     @image  = Image.new(*@i_args)
   end
