@@ -4,7 +4,7 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Figure
-  attr_accessor :name, :color, :matrix, :pos_x, :pos_y
+  attr_accessor :name, :color, :matrix, :pos_x, :pos_y, :size_x, :size_y, :distance
 
   #
   # NOTE! creates a random figure if there is no explicit config
@@ -22,11 +22,14 @@ class Figure
     @block  = Block.new(window, @color)
 
     @matrix = config.map{ |row| row.split('').map{|c| c == 'x'}}
-    @matrix.reject!{ |row| row.none? }
 
+    # getting rid of empty colls and rows
+    @matrix.reject!{ |row| row.none? }
     while @matrix.map{ |row| row.last }.none?
       @matrix.each{ |row| row.pop }
     end
+
+    recalc! # precalculates the sizes and distances
   end
 
   def draw
@@ -44,30 +47,33 @@ class Figure
 
   def move_left
     @pos_x -= 1
+    recalc!
   end
 
   def move_right
     @pos_x += 1
+    recalc!
   end
 
   def turn_left
     @matrix = (0..size_x-1).map do
       @matrix.map{ |row| row.pop }
     end
+    recalc!
   end
 
   def turn_right
     @matrix = (0..size_x-1).map do
       @matrix.map{ |row| row.shift }.reverse
     end
+    recalc!
   end
 
-  def size_x
-    @matrix[0].size
-  end
+  def recalc!
+    @size_x = @matrix[0].size
+    @size_y = @matrix.size
 
-  def size_y
-    @matrix.size
+    @distance = @window.glass.spaces_below(self)
   end
 
   FIGURES = {
