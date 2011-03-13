@@ -8,16 +8,20 @@ class Glass
   HEIGHT = 24
   COLOR  = Color::GRAY
 
-  attr_accessor :pos_x, :pos_y
+  attr_accessor :pos_x, :pos_y, :matrix
 
   def initialize(window, x, y)
     @block = Block.new(window, COLOR)
 
     @pos_x  = x
     @pos_y  = y
+
+    reset!
   end
 
   def draw
+    @block.color = COLOR
+
     # drawing the walls
     (0..HEIGHT).each do |i|
       @block.draw(@pos_x,  @pos_y + i)
@@ -28,5 +32,22 @@ class Glass
     (1..WIDTH).each do |i|
       @block.draw(@pos_x + i, @pos_y + HEIGHT)
     end
+
+    # drawing the blocks inside
+    @matrix.each_with_index do |row, y|
+      row.each_with_index do |color, x|
+        unless color == nil
+          @block.color = color
+          @block.draw(@pos_x + x, @pos_y + y)
+        end
+      end
+    end
   end
+
+  def reset!
+    @matrix = (0..HEIGHT-1).map do
+      Array.new(WIDTH)
+    end
+  end
+
 end

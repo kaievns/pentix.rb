@@ -48,6 +48,13 @@ module MatrixHelper
       end
     end
   end
+
+  # making a set of boolean values out of the matrix
+  def boolify(matrix)
+    matrix.map do |row|
+      row.map{ |cell| !!cell}
+    end
+  end
 end
 
 #
@@ -57,7 +64,7 @@ RSpec::Matchers.define :render_blocks do |expected|
   extend MatrixHelper
 
   match do |actual|
-    draw_matrix(actual) == str_to_matrix(expected)
+    boolify(draw_matrix(actual)) == boolify(str_to_matrix(expected))
   end
 
   failure_message_for_should do |actual|
@@ -74,7 +81,7 @@ RSpec::Matchers.define :have_matrix do |expected|
   extend MatrixHelper
 
   match do |actual|
-    actual.matrix == str_to_matrix(expected)
+    boolify(actual.matrix) == boolify(str_to_matrix(expected))
   end
 
   failure_message_for_should do |actual|

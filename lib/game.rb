@@ -41,6 +41,7 @@ class Game < Window
 
   def reset!
     @status.reset!
+    @glass.reset!
     show_next_figure
   end
 
