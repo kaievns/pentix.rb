@@ -89,6 +89,24 @@ describe Figure do
       @glass.stub!(:spaces_below).and_return(@distance)
     end
 
+    describe "#move" do
+      before do
+        @figure.move(10, 20)
+      end
+
+      it "should set the x-position" do
+        @figure.pos_x.should == 10
+      end
+
+      it "should set the y-position" do
+        @figure.pos_y.should == 20
+      end
+
+      it "should recalc the distance" do
+        @figure.distance.should == @distance
+      end
+    end
+
     describe "#move_left" do
       before do
         @figure.pos_x = 10

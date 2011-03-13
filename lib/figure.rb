@@ -45,14 +45,18 @@ class Figure
     return self
   end
 
-  def move_left
-    @pos_x -= 1
+  def move(x, y)
+    @pos_x = x
+    @pos_y = y
     recalc!
   end
 
+  def move_left
+    move(@pos_x - 1, @pos_y)
+  end
+
   def move_right
-    @pos_x += 1
-    recalc!
+    move(@pos_x + 1, @pos_y)
   end
 
   def turn_left
