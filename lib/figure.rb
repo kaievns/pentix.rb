@@ -45,18 +45,18 @@ class Figure
     return self
   end
 
-  def move(x, y)
+  def move_to(x, y)
     @pos_x = x
     @pos_y = y
     recalc!
   end
 
   def move_left
-    move(@pos_x - 1, @pos_y)
+    move_to(@pos_x - 1, @pos_y)
   end
 
   def move_right
-    move(@pos_x + 1, @pos_y)
+    move_to(@pos_x + 1, @pos_y)
   end
 
   def turn_left
@@ -78,6 +78,8 @@ class Figure
     @size_y = @matrix.size
 
     @distance = @window.glass.spaces_below(self)
+
+    self # sending self-reference back
   end
 
   FIGURES = {

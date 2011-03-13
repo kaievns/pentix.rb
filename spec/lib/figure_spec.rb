@@ -89,9 +89,9 @@ describe Figure do
       @glass.stub!(:spaces_below).and_return(@distance)
     end
 
-    describe "#move" do
+    describe "#move_to" do
       before do
-        @figure.move(10, 20)
+        @figure.move_to(10, 20)
       end
 
       it "should set the x-position" do
