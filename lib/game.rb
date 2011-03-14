@@ -1,7 +1,7 @@
 #
 # The main game window class
 #
-# NOTE: all the sizes in the code is _in_blocks_
+# NOTE: all the sizes in the code are _in_blocks_
 #
 # Copyright (C) 2011 Nikolay Nemshilov
 #
@@ -13,7 +13,7 @@ class Game < Window
     super(27 * Block::SIZE, 27 * Block::SIZE, false)
     self.caption = "Pentix"
 
-    @glass    = Glass.new(self,   1, 1) # in blocks!
+    @glass    = Glass.new(self,   1, 1)
     @status   = Status.new(self, 16, 1)
 
     @controls = Controls.new(self)
@@ -42,6 +42,7 @@ class Game < Window
   def reset!
     @status.reset!
     @glass.reset!
+
     show_next_figure
   end
 
@@ -49,8 +50,7 @@ class Game < Window
     @figure        = @status.figure || Figure.new(self)
     @status.figure = Figure.new(self)
 
-    @figure.pos_x  = 2 + (Glass::WIDTH - @figure.size_x)/2
-    @figure.pos_y  = 1
+    @figure.move_to((Glass::WIDTH - @figure.size_x)/2 + 2, 1)
   end
 
 end

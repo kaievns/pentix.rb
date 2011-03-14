@@ -4,7 +4,7 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Figure
-  attr_accessor :name, :color, :matrix, :pos_x, :pos_y, :size_x, :size_y, :distance
+  attr_accessor :name, :color, :matrix, :pos_x, :pos_y, :distance
 
   #
   # NOTE! creates a random figure if there is no explicit config
@@ -25,11 +25,10 @@ class Figure
 
     # getting rid of empty colls and rows
     @matrix.reject!{ |row| row.none? }
+
     while @matrix.map{ |row| row.last }.none?
       @matrix.each{ |row| row.pop }
     end
-
-    recalc! # precalculates the sizes and distances
   end
 
   def draw
@@ -40,15 +39,21 @@ class Figure
     end
   end
 
+  def size_x
+    @matrix[0].size
+  end
+
+  def size_y
+    @matrix.size
+  end
+
   def drop
     @pos_y += Glass::HEIGHT
     return self
   end
 
   def move_to(x, y)
-    @pos_x = x
-    @pos_y = y
-    recalc!
+    try_set(@matrix, x, y)
   end
 
   def move_left
@@ -60,26 +65,34 @@ class Figure
   end
 
   def turn_left
-    @matrix = (0..size_x-1).map do
-      @matrix.map{ |row| row.pop }
+    new_matrix = (0..size_x-1).map do |i|
+      @matrix.map{ |row| row[size_x - 1 - i] }
     end
-    recalc!
+
+    try_set(new_matrix, @pos_x, @pos_y)
   end
 
   def turn_right
-    @matrix = (0..size_x-1).map do
-      @matrix.map{ |row| row.shift }.reverse
+    new_matrix = (0..size_x-1).map do |i|
+      @matrix.map{ |row| row[i] }.reverse
     end
-    recalc!
+
+    try_set(new_matrix, @pos_x, @pos_y)
   end
 
-  def recalc!
-    @size_x = @matrix[0].size
-    @size_y = @matrix.size
+protected
 
-    @distance = @window.glass.spaces_below(self)
+  def try_set(matrix, pos_x, pos_y)
+    # adjusting x-position for tall figures
+    pos_x += (size_x - matrix[0].size)/2 if matrix != @matrix
 
-    self # sending self-reference back
+    if @window.glass.has_space_for?(matrix, pos_x, pos_y)
+      @pos_x    = pos_x
+      @pos_y    = pos_y
+      @matrix   = matrix
+
+      @distance = @window.glass.spaces_below(self)
+    end
   end
 
   FIGURES = {

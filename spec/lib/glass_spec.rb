@@ -202,10 +202,10 @@ describe Glass do
       end
 
       it "should glue figures on top of each other" do
-        @figure.move_to(@glass.pos_x + 1, @glass.pos_y)
+        @figure.move_to(@glass.pos_x + 2, @glass.pos_y)
         @glass.glue_in(@figure)
 
-        @figure.move_to(@glass.pos_x, @glass.pos_y)
+        @figure.move_to(@glass.pos_x + 1, @glass.pos_y)
         @glass.glue_in(@figure)
 
         @glass.should have_matrix(%Q{
@@ -224,20 +224,94 @@ describe Glass do
           | . . . . . . . . . . . |
           | . . . . . . . . . . . |
           | . . . . . . . . . . . |
-          |x. . . . . . . . . . . |
-          |x.x. . . . . . . . . . |
-          | .x.x. . . . . . . . . |
+          | . . . . . . . . . . . |
           | .x. . . . . . . . . . |
           | .x.x. . . . . . . . . |
+          | . .x.x. . . . . . . . |
+          | . .x. . . . . . . . . |
           | .x.x.x. . . . . . . . |
-          | .x.x. . . . . . . . . |
+          | .x.x.x.x. . . . . . . |
           | .x. . . . . . . . . . |
           | .x. . . . . . . . . . |
         })
       end
     end
+  end
 
+  describe "#has_space_for?" do
+    before do
+      @figure = Figure.new(@window, :cross)
+    end
 
+    describe "in an empty glass" do
+      it "should say 'yes' when the figure is in the middle" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + 4, @glass.pos_y + 4
+        )
+      end
+
+      it "should say 'nope' when the figure is out of the left border" do
+        @glass.should_not have_space_for(
+          @figure.matrix, @glass.pos_x, @glass.pos_y
+        )
+      end
+
+      it "should say 'nope' if a figure is out of the right border" do
+        @glass.should_not have_space_for(
+          @figure.matrix, @glass.pos_x + Glass::WIDTH + 2 - @figure.size_x, @glass.pos_y
+        )
+      end
+
+      it "should say 'nope' if a figure is below the bottom line" do
+        @glass.should_not have_space_for(
+          @figure.matrix, @glass.pos_x + 4, @glass.pos_y + Glass::HEIGHT - @figure.size_y + 1
+        )
+      end
+
+      it "should say 'yup' for a figure next to the left border" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + 1, @glass.pos_y
+        )
+      end
+
+      it "should say 'yup' for a figure next to the right border" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + Glass::WIDTH + 1 - @figure.size_x, @glass.pos_y
+        )
+      end
+
+      it "should say 'yup' for a figure next to the bottom border" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + 4, @glass.pos_y + Glass::HEIGHT - @figure.size_y
+        )
+      end
+    end
+
+    describe "with some blocks in the glass" do
+      before do
+        10.times do |i|
+          @glass.matrix[i][i] = Color::GRAY
+        end
+      end
+
+      it "should say 'yup' for figures that are away from the blocks" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + 8, @glass.pos_y
+        )
+      end
+
+      it "should say 'yup' for figures that fit the landscape" do
+        @glass.should have_space_for(
+          @figure.matrix, @glass.pos_x + 2, @glass.pos_y
+        )
+      end
+
+      it "should say 'nope' for figures that intersect with the landscape" do
+        @glass.should_not have_space_for(
+          @figure.matrix, @glass.pos_x + 1, @glass.pos_y
+        )
+      end
+    end
   end
 
 end

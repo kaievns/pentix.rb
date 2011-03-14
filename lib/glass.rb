@@ -91,4 +91,22 @@ class Glass
       end
     end
   end
+
+  def has_space_for?(matrix, pos_x, pos_y)
+    if pos_x > @pos_x && pos_x < (@pos_x + WIDTH + 2 - matrix[0].size)
+      if pos_y >= @pos_y && pos_y < (@pos_y + HEIGHT + 1 - matrix.size)
+        matrix.each_with_index do |row, y|
+          row.each_with_index do |visible, x|
+            if visible && nil != @matrix[pos_y - @pos_y + y][pos_x - @pos_x + x]
+              return false
+            end
+          end
+        end
+
+        return true
+      end
+    end
+
+    false
+  end
 end

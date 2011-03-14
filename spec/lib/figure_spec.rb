@@ -11,9 +11,6 @@ describe Figure do
 
     describe "by name" do
       before do
-        @distance = 22
-        @glass.should_receive(:spaces_below).and_return(@distance)
-
         @name   = :stairs
         @color  = Figure::COLORS[Figure::FIGURES[@name].split('|').last.to_sym]
         @figure = Figure.new(@window, @name)
@@ -44,11 +41,6 @@ describe Figure do
         @figure.size_x.should == 3
         @figure.size_y.should == 3
       end
-
-      it "should preset the figure distance" do
-        @figure.distance.should == @distance
-      end
-
     end
 
     it "should instance random figures if called without a name" do
@@ -84,7 +76,12 @@ describe Figure do
 
   describe "manipulations" do
     before do
+      @pos_x    = @glass.pos_x + 4
+      @pos_y    = @glass.pos_y
+
       @figure   = Figure.new(@window, :l_crutch)
+      @figure.move_to(@pos_x, @pos_y)
+
       @distance = 10
       @glass.stub!(:spaces_below).and_return(@distance)
     end
@@ -109,31 +106,41 @@ describe Figure do
 
     describe "#move_left" do
       before do
-        @figure.pos_x = 10
         @figure.move_left
       end
 
       it "should decrease the x-position by 1" do
-        @figure.pos_x.should == 9
+        @figure.pos_x.should == @pos_x - 1
       end
 
       it "should set the figure's distance" do
         @figure.distance.should == @distance
+      end
+
+      it "should not move the figure beyond the left border" do
+        @pos_x = @figure.pos_x = @glass.pos_x + 1
+        @figure.move_left
+        @figure.pos_x.should == @pos_x
       end
     end
 
     describe "#move_right" do
       before do
-        @figure.pos_x = 10
         @figure.move_right
       end
 
       it "should increase the x-position by 1" do
-        @figure.pos_x.should == 11
+        @figure.pos_x.should == @pos_x + 1
       end
 
       it "should set the figure's distance" do
         @figure.distance.should == @distance
+      end
+
+      it "should not move the figure beyond the right border" do
+        @pos_x = @figure.pos_x = @glass.pos_x + Glass::WIDTH + 2 - @figure.size_x
+        @figure.move_right
+        @figure.pos_x.should == @pos_x
       end
     end
 
@@ -177,8 +184,40 @@ describe Figure do
         @figure.size_y.should == 4
       end
 
+      it "should adjust figure's position to make it look centered" do
+        @figure.pos_x.should == @pos_x - 1
+        @figure.turn_left #making it vertical again
+        @figure.pos_x.should == @pos_x
+      end
+
       it "should set the figure's distance" do
         @figure.distance.should == @distance
+      end
+
+      it "should not turn the figure if there is no space for that" do
+        figure = Figure.new(@window, :h_stick)
+
+        # setting it vertically
+        figure.move_to(@glass.pos_x + 1, @glass.pos_y)
+        figure.turn_left
+        figure.should have_matrix(%Q{
+          |x|
+          |x|
+          |x|
+          |x|
+          |x|
+        })
+
+        # moving it to the left border
+        figure.move_to(@glass.pos_x + 1, @glass.pos_y)
+        figure.turn_left
+        figure.should have_matrix(%Q{
+          |x|
+          |x|
+          |x|
+          |x|
+          |x|
+        })
       end
     end
 
@@ -222,8 +261,34 @@ describe Figure do
         @figure.size_y.should == 4
       end
 
+      it "should adjust figure's position to make it look centered" do
+        @figure.pos_x.should == @pos_x - 1
+        @figure.turn_left #making it vertical again
+        @figure.pos_x.should == @pos_x
+      end
+
       it "should set the figure's distance" do
         @figure.distance.should == @distance
+      end
+
+      it "should not turn the figure if there is no space for that" do
+        figure = Figure.new(@window, :h_stick)
+
+        # setting it vertically
+        figure.move_to(@glass.pos_x + 1, @glass.pos_y)
+        figure.turn_right
+
+        # moving it to the left border
+        figure.move_to(@glass.pos_x + 1, @glass.pos_y)
+        figure.turn_right
+
+        figure.should have_matrix(%Q{
+          |x|
+          |x|
+          |x|
+          |x|
+          |x|
+        })
       end
     end
   end
