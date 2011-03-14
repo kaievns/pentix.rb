@@ -48,8 +48,8 @@ class Figure
   end
 
   def drop
-    @pos_y += Glass::HEIGHT
-    return self
+    @window.glass.glue_in(self)
+    @window.show_next_figure
   end
 
   def move_to(x, y)

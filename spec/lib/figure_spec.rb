@@ -1,5 +1,10 @@
 require File.dirname(__FILE__) + "/../spec_helper"
 
+class DummyWindow
+  def show_next_figure
+  end
+end
+
 describe Figure do
   before :all do
     @window = DummyWindow.new
@@ -296,15 +301,17 @@ describe Figure do
   describe "#drop" do
     before do
       @figure = Figure.new(@window)
-      @result = @figure.drop
+      @figure.move_to(@glass.pos_x + 1, @glass.pos_y)
     end
 
-    it "should return the @figure itself back" do
-      @result.should == @figure
+    it "should call the glass to #glue_in the figure" do
+      @glass.should_receive(:glue_in).with(@figure)
+      @figure.drop
     end
 
-    it "should increase the vertical position by the glass height" do
-      @figure.pos_y.should == Glass::HEIGHT
+    it "should call the @window to #show_next_figure" do
+      @window.should_receive(:show_next_figure)
+      @figure.drop
     end
   end
 end
