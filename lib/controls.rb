@@ -15,10 +15,6 @@ class Controls
     :turn_right => Button::KbDown
   }.freeze
 
-  def initialize(window)
-    @window = window
-  end
-
   def command_for(button)
     BUTTONS.each do |key, value|
       return key if button === value

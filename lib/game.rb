@@ -16,7 +16,7 @@ class Game < Window
     @glass    = Glass.new(self,   1, 1)
     @status   = Status.new(self, 16, 1)
 
-    @controls = Controls.new(self)
+    @controls = Controls.new
 
     reset!
   end
