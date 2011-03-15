@@ -83,7 +83,7 @@ class Glass
       # checking if it interescts with any existing blocks
       @matrix.each_with_index do |row, y|
         if nil != row[x]
-          distance = y - column_height
+          distance = y - lowest_point
           break
         end
       end

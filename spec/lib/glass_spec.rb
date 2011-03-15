@@ -123,6 +123,14 @@ describe Glass do
         @figure.pos_x = @glass.pos_x + 6
         @glass.spaces_below(@figure).should == Glass::HEIGHT - @figure.size_y
       end
+
+      it "should calculate the distance correctly when the figure is in the middle" do
+        @figure.pos_x = @glass.pos_x + 1
+        @figure.pos_y = 10
+
+        @glass.spaces_below(@figure).should == Glass::HEIGHT -
+          @figure.size_y - @stack_height - @figure.pos_y + @glass.pos_y
+      end
     end
   end
 
