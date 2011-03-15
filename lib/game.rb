@@ -28,7 +28,7 @@ class Game < Window
   end
 
   def update
-    if time_to_move
+    if @playing && time_to_move
       if @figure.distance > 0
         @figure.move_down
       else
@@ -47,6 +47,13 @@ class Game < Window
     @next_time   = 0
 
     time_to_move # precalculating the next time to move
+
+    @playing     = true
+  end
+
+  def its_over!
+    @playing = false
+    puts "Game Over!"
   end
 
   def button_down(button)
@@ -65,7 +72,17 @@ class Game < Window
     @figure        = @status.figure || Figure.new(self)
     @status.figure = Figure.new(self)
 
-    @figure.move_to((Glass::WIDTH - @figure.size_x)/2 + 2, 1)
+    x = (Glass::WIDTH - @figure.size_x)/2 + 2
+    y = @glass.pos_y
+
+    if @glass.has_space_for?(@figure.matrix, x, y)
+      @figure.move_to(x, y)
+    else
+      @figure.pos_x = x
+      @figure.pos_y = y
+
+      its_over!
+    end
   end
 
   def time_to_move
