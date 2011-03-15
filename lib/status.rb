@@ -19,6 +19,8 @@ class Status
     5 => 1200
   }
 
+  LEVELUP = 10 # the number of lines to level up
+
   def initialize(window, x, y)
     @pos_x   = x
     @pos_y   = y
@@ -48,10 +50,13 @@ class Status
   end
 
   def reset!
-    @level   = 0
+    @level   = 1
     @lines   = 0
     @score   = 0
     @figures = 0
+
+    # the next levelup lines num
+    @levelup = LEVELUP
   end
 
   def count_drop(figure)
@@ -65,6 +70,11 @@ class Status
     if lines.size > 0
       @score += SCORING_SYSTEM[lines.size] * @level
       @lines += lines.size
+
+      if @lines >= @levelup
+        @level  += 1
+        @levelup = @lines + LEVELUP - @lines % LEVELUP
+      end
     end
   end
 

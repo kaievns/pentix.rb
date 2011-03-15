@@ -19,8 +19,6 @@ class Game < Window
     @controls = Controls.new
 
     reset!
-
-    self.level = 2
   end
 
   def draw
@@ -44,19 +42,11 @@ class Game < Window
     @glass.reset!
 
     show_next_figure
-  end
 
-  def level
-    @status.level
-  end
-
-  def level=(value)
-    @status.level = value
-
-    @time_offset = 1000 / level # blocks per second
+    @time_offset = 1000 / @status.level # blocks per second
     @next_time   = 0
 
-    time_to_move
+    time_to_move # precalculating the next time to move
   end
 
   def button_down(button)
