@@ -1,7 +1,10 @@
 # Pentix In Ruby
 
-Pentix is a tough Siberian version of the good old tetris game.
-It uses `5x5` figures matrix and a collection of 29 crazy shapes.
+Pentix is a morally superior Siberian version of the good old tetris game.
+It uses `5x5` matrix and a collection of 29 advanced figures.
+
+And yes, they won't allow you to operate a battle bear until you reach at
+least level 15 in this game :)
 
 
 ## Usage
