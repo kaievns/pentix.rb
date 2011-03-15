@@ -19,12 +19,44 @@ class Game < Window
     @controls = Controls.new
 
     reset!
+
+    self.level = 2
   end
 
   def draw
     @glass.draw
     @status.draw
     @figure.draw
+  end
+
+  def update
+    if time_to_move
+      if @figure.distance > 0
+        @figure.move_down
+      else
+        @figure.drop
+      end
+    end
+  end
+
+  def reset!
+    @status.reset!
+    @glass.reset!
+
+    show_next_figure
+  end
+
+  def level
+    @status.level
+  end
+
+  def level=(value)
+    @status.level = value
+
+    @time_offset = 1000 / level # blocks per second
+    @next_time   = 0
+
+    time_to_move
   end
 
   def button_down(button)
@@ -39,18 +71,19 @@ class Game < Window
     end
   end
 
-  def reset!
-    @status.reset!
-    @glass.reset!
-
-    show_next_figure
-  end
-
   def show_next_figure
     @figure        = @status.figure || Figure.new(self)
     @status.figure = Figure.new(self)
 
     @figure.move_to((Glass::WIDTH - @figure.size_x)/2 + 2, 1)
+  end
+
+  def time_to_move
+    if Gosu::milliseconds > @next_time
+      @next_time = Gosu::milliseconds + @time_offset
+    else
+      false
+    end
   end
 
 end

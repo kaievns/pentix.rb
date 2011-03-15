@@ -71,6 +71,10 @@ class Figure
     move_to(@pos_x + 1, @pos_y)
   end
 
+  def move_down
+    move_to(@pos_x, @pos_y + 1)
+  end
+
   def turn_left
     new_matrix = (0..size_x-1).map do |i|
       @matrix.map{ |row| row[size_x - 1 - i] }
