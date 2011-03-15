@@ -102,7 +102,7 @@ class Glass
       if pos_y >= @pos_y && pos_y < (@pos_y + HEIGHT + 1 - matrix.size)
         matrix.each_with_index do |row, y|
           row.each_with_index do |visible, x|
-            if visible && nil != @matrix[pos_y - @pos_y + y][pos_x - @pos_x + x]
+            if visible && nil != @matrix[pos_y - @pos_y + y][pos_x - @pos_x + x - 1]
               return false
             end
           end
@@ -131,6 +131,23 @@ class Glass
           ] = figure.color
         end
       end
+    end
+
+    remove_full_lines
+  end
+
+  #
+  # Checks the glass for full lines, removes them
+  # and refills the glass
+  #
+  def remove_full_lines
+    lines = @matrix.map do |row|
+      row.all? ? row : nil
+    end.compact!
+
+    lines.each do |row|
+      @matrix.delete(row)
+      @matrix.unshift Array.new(WIDTH)
     end
   end
 end

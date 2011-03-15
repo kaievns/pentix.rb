@@ -302,7 +302,7 @@ describe Glass do
 
       it "should say 'yup' for figures that fit the landscape" do
         @glass.should have_space_for(
-          @figure.matrix, @glass.pos_x + 2, @glass.pos_y
+          @figure.matrix, @glass.pos_x + 3, @glass.pos_y
         )
       end
 
@@ -311,6 +311,49 @@ describe Glass do
           @figure.matrix, @glass.pos_x + 1, @glass.pos_y
         )
       end
+    end
+  end
+
+  describe "#remove_full_lines" do
+
+    before do
+      10.times do |y|
+        @glass.matrix[y].each_with_index do |cell, x|
+          @glass.matrix[Glass::HEIGHT - y - 1][x] =
+            y % 2 == 0 || x % 2 == 0 ? 0xFFFFFFFF : nil
+        end
+      end
+
+      @glass.remove_full_lines
+    end
+
+    it "should have matrix like that" do
+      @glass.should have_matrix(%Q{
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        | . . . . . . . . . . . |
+        |x. .x. .x. .x. .x. .x. |
+        |x. .x. .x. .x. .x. .x. |
+        |x. .x. .x. .x. .x. .x. |
+        |x. .x. .x. .x. .x. .x. |
+        |x. .x. .x. .x. .x. .x. |
+      })
     end
   end
 
