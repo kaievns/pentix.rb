@@ -1,11 +1,15 @@
 #
-# The figure unit
+# The figure unit. It handles the figure basics, like drawing itself
+# making all sorts of manipulations like movements and rotations,
+# plus it keeps the track of it's position and distance below
 #
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Figure
   attr_accessor :name, :color, :matrix, :pos_x, :pos_y, :distance
 
+  #
+  # Basic constructor
   #
   # NOTE! creates a random figure if there is no explicit config
   #
@@ -31,6 +35,9 @@ class Figure
     end
   end
 
+  #
+  # Draws the blocks of the figure
+  #
   def draw
     @matrix.each_with_index do |row, y|
       row.each_with_index do |visible, x|

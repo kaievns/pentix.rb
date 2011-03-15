@@ -5,11 +5,11 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Status
+  attr_accessor :figure, :pos_x, :pos_y, :level, :lines, :figures, :score
+
   HEAD_FONT  = ['Courier',     Block::SIZE + 5, Color::GRAY].freeze
   TEXT_FONT  = ['Courier New', Block::SIZE, Color::GRAY].freeze
   TEXT_WIDTH = 22 # chars
-
-  attr_accessor :figure, :pos_x, :pos_y, :level, :lines, :figures, :score
 
   def initialize(window, x, y)
     @pos_x   = x
@@ -27,7 +27,7 @@ class Status
     @figure.pos_y = @pos_y + 2
     @figure.draw
 
-    draw_head "Score:",             9
+    draw_head "Score:",              9
     draw_text "Level",      @level, 10
     draw_text "Score",      @score, 11
     draw_text "Lines",      @lines, 12
@@ -48,6 +48,9 @@ class Status
 
 private
 
+  #
+  # A shortcut to draw a header text
+  #
   def draw_head(text, pos)
     @head_font.draw(
       text,   @pos_x * Block::SIZE,
@@ -56,6 +59,9 @@ private
     )
   end
 
+  #
+  # A shortcut to draw a normal text
+  #
   def draw_text(text, value, pos)
     value = "..#{value}"
 

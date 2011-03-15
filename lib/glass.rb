@@ -1,15 +1,19 @@
 #
-# The glass thing
+# The glass thing. It handles the figure position calculcations
+# watches the available space, removes full lines, etc, etc.
 #
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Glass
+  attr_accessor :pos_x, :pos_y, :matrix
+
   WIDTH  = 12
   HEIGHT = 24
   COLOR  = Color::GRAY
 
-  attr_accessor :pos_x, :pos_y, :matrix
-
+  #
+  # Basic constructor
+  #
   def initialize(window, x, y)
     @block = Block.new(window, COLOR)
 
@@ -19,12 +23,18 @@ class Glass
     reset!
   end
 
+  #
+  # Empties the glass by creating a new blocks matrix
+  #
   def reset!
     @matrix = (0..HEIGHT-1).map do
       Array.new(WIDTH)
     end
   end
 
+  #
+  # Draws the class walls and content
+  #
   def draw
     @block.color = COLOR
 
@@ -50,6 +60,10 @@ class Glass
     end
   end
 
+  #
+  # Calculates the available space (in blocks)
+  # below the figure
+  #
   def spaces_below(figure)
     fig_x = figure.pos_x - @pos_x - 1
     fig_y = figure.pos_y - @pos_y
@@ -78,6 +92,11 @@ class Glass
     end.min
   end
 
+  #
+  # Checks if this figure matrix can fit the glass at the given
+  # position. Used for prechecks on figure manipulations to
+  # enforce movement constraints
+  #
   def has_space_for?(matrix, pos_x, pos_y)
     if pos_x > @pos_x && pos_x < (@pos_x + WIDTH + 2 - matrix[0].size)
       if pos_y >= @pos_y && pos_y < (@pos_y + HEIGHT + 1 - matrix.size)
@@ -96,6 +115,11 @@ class Glass
     false
   end
 
+  #
+  # Glues the figure into the glass. The figure might hang above
+  # or virtually get through the stack, it doesn't matter. This
+  # method uses the horizontal position only
+  #
   def glue_in(figure)
     (0..figure.size_x - 1).each do |x|
       (0..figure.size_y-1).each do |y|
