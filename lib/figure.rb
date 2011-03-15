@@ -91,7 +91,10 @@ protected
 
   def try_set(matrix, pos_x, pos_y)
     # adjusting x-position for tall figures
-    pos_x += (size_x - matrix[0].size)/2 if matrix != @matrix
+    if matrix != @matrix
+      offset = (size_x - matrix[0].size).abs/2
+      pos_x += offset * (size_x > matrix[0].size ? 1 : -1)
+    end
 
     if @window.glass.has_space_for?(matrix, pos_x, pos_y)
       @pos_x    = pos_x
