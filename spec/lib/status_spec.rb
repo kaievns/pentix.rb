@@ -92,4 +92,43 @@ describe Status do
     end
   end
 
+  describe "scoring" do
+    before do
+      @figure = Figure.new(@window)
+
+      @status.score = 0
+      @status.level = 1
+    end
+
+    it "should calculate correctly a figure drop score" do
+      @figure.distance = 8
+      @status.count_drop @figure
+      @status.score.should == 8
+    end
+
+    it "should multiply the drop score by the current level" do
+      @figure.distance = 9
+      @status.level = 3
+      @status.count_drop @figure
+      @status.score.should == 27
+    end
+
+    it "should score lines kill according to the scoring system" do
+      Status::SCORING_SYSTEM.each do |lines_num, score|
+        @status.score = 0
+        @status.count_kill Array.new(lines_num)
+        @status.score.should == score
+      end
+    end
+
+    it "should multiply the lines kill score by the current level" do
+      Status::SCORING_SYSTEM.each do |lines_num, score|
+        @status.score = 0
+        @status.level = 4
+        @status.count_kill Array.new(lines_num)
+        @status.score.should == score * 4
+      end
+    end
+  end
+
 end

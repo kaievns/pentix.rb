@@ -4,8 +4,8 @@ describe Glass do
 
   before do
     @window = DummyWindow.new
-    @glass  = Glass.new(@window, 1, 2)
-    @window.glass = @glass
+    @window.glass  = @glass  = Glass.new(@window, 1, 2)
+    @window.status = @status = Status.new(@window, 20, 2)
   end
 
   describe "initialization" do
@@ -168,6 +168,15 @@ describe Glass do
         | . .x.x. . . . . . . . |
         | . . .x.x. . . . . . . |
       })
+    end
+
+    it "should call the status for scores" do
+      @figure.move_to(@glass.pos_x + 3, @glass.pos_y)
+
+      @status.should_receive(:count_drop).with(@figure)
+      @status.should_receive(:count_kill).with([])
+
+      @glass.glue_in(@figure)
     end
 
     describe "with some blocks already in the glass" do

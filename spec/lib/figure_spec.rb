@@ -8,8 +8,9 @@ end
 describe Figure do
   before :all do
     @window = DummyWindow.new
-    @glass  = Glass.new(@window, 1, 2)
-    @window.glass = @glass
+
+    @window.glass  = @glass  = Glass.new(@window,   1, 2)
+    @window.status = @status = Status.new(@window, 20, 2)
   end
 
   describe "initialization" do

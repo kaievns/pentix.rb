@@ -15,7 +15,8 @@ class Glass
   # Basic constructor
   #
   def initialize(window, x, y)
-    @block = Block.new(window, COLOR)
+    @window = window
+    @block  = Block.new(window, COLOR)
 
     @pos_x  = x
     @pos_y  = y
@@ -121,6 +122,8 @@ class Glass
   # method uses the horizontal position only
   #
   def glue_in(figure)
+    @window.status.count_drop(figure)
+
     (0..figure.size_x - 1).each do |x|
       (0..figure.size_y-1).each do |y|
         if figure.matrix[y][x]
@@ -149,5 +152,7 @@ class Glass
       @matrix.delete(row)
       @matrix.unshift Array.new(WIDTH)
     end
+
+    @window.status.count_kill(lines)
   end
 end

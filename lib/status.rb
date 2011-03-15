@@ -11,6 +11,14 @@ class Status
   TEXT_FONT  = ['Courier New', Block::SIZE, Color::GRAY].freeze
   TEXT_WIDTH = 22 # chars
 
+  SCORING_SYSTEM = {
+    1 => 100,
+    2 => 300,
+    3 => 500,
+    4 => 800,
+    5 => 1200
+  }
+
   def initialize(window, x, y)
     @pos_x   = x
     @pos_y   = y
@@ -44,6 +52,18 @@ class Status
     @lines   = 0
     @score   = 0
     @figures = 0
+  end
+
+  def count_drop(figure)
+    if figure.distance > 0
+      @score += figure.distance * @level
+    end
+  end
+
+  def count_kill(lines)
+    if lines.size > 0
+      @score += SCORING_SYSTEM[lines.size] * @level
+    end
   end
 
 private
