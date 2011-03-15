@@ -44,14 +44,14 @@ class Glass
       row.each_with_index do |color, x|
         unless color == nil
           @block.color = color
-          @block.draw(@pos_x + x, @pos_y + y)
+          @block.draw(@pos_x + x + 1, @pos_y + y)
         end
       end
     end
   end
 
   def spaces_below(figure)
-    fig_x = figure.pos_x - @pos_x
+    fig_x = figure.pos_x - @pos_x - 1
     fig_y = figure.pos_y - @pos_y
 
     (0..figure.size_x-1).map do |x|
@@ -78,20 +78,6 @@ class Glass
     end.min
   end
 
-  def glue_in(figure)
-    (0..figure.size_x - 1).each do |x|
-      (0..figure.size_y-1).each do |y|
-        if figure.matrix[y][x]
-          @matrix[
-            y + figure.pos_y - @pos_y + figure.distance
-          ][
-            x + figure.pos_x - @pos_x
-          ] = figure.color
-        end
-      end
-    end
-  end
-
   def has_space_for?(matrix, pos_x, pos_y)
     if pos_x > @pos_x && pos_x < (@pos_x + WIDTH + 2 - matrix[0].size)
       if pos_y >= @pos_y && pos_y < (@pos_y + HEIGHT + 1 - matrix.size)
@@ -108,5 +94,19 @@ class Glass
     end
 
     false
+  end
+
+  def glue_in(figure)
+    (0..figure.size_x - 1).each do |x|
+      (0..figure.size_y-1).each do |y|
+        if figure.matrix[y][x]
+          @matrix[
+            y + figure.pos_y - @pos_y + figure.distance
+          ][
+            x + figure.pos_x - @pos_x - 1
+          ] = figure.color
+        end
+      end
+    end
   end
 end
