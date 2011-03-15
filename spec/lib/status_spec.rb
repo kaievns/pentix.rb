@@ -98,35 +98,51 @@ describe Status do
 
       @status.score = 0
       @status.level = 1
+      @status.lines = 0
+      @status.figures = 0
     end
 
     it "should calculate correctly a figure drop score" do
       @figure.distance = 8
+
       @status.count_drop @figure
+
       @status.score.should == 8
+      @status.figures.should == 1
     end
 
     it "should multiply the drop score by the current level" do
       @figure.distance = 9
       @status.level = 3
+
       @status.count_drop @figure
+
       @status.score.should == 27
+      @status.figures.should == 1
     end
 
     it "should score lines kill according to the scoring system" do
       Status::SCORING_SYSTEM.each do |lines_num, score|
         @status.score = 0
+        @status.lines = 0
+
         @status.count_kill Array.new(lines_num)
+
         @status.score.should == score
+        @status.lines.should == lines_num
       end
     end
 
     it "should multiply the lines kill score by the current level" do
       Status::SCORING_SYSTEM.each do |lines_num, score|
         @status.score = 0
+        @status.lines = 0
         @status.level = 4
+
         @status.count_kill Array.new(lines_num)
+
         @status.score.should == score * 4
+        @status.lines.should == lines_num
       end
     end
   end

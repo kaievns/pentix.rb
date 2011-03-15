@@ -56,13 +56,15 @@ class Status
 
   def count_drop(figure)
     if figure.distance > 0
-      @score += figure.distance * @level
+      @score   += figure.distance * @level
+      @figures += 1
     end
   end
 
   def count_kill(lines)
     if lines.size > 0
       @score += SCORING_SYSTEM[lines.size] * @level
+      @lines += lines.size
     end
   end
 
