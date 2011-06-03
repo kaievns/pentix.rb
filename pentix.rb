@@ -14,6 +14,7 @@ require 'figure'
 require 'glass'
 require 'status'
 require 'controls'
+require 'finish'
 require 'game'
 
 

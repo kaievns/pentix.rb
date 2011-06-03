@@ -18,13 +18,21 @@ class Game < Window
 
     @controls = Controls.new
 
+    @finish   = Finish.new(self, 0, 0)
+
+
     reset!
   end
 
   def draw
-    @glass.draw
-    @status.draw
-    @figure.draw
+    if @playing
+      @glass.draw
+      @status.draw
+      @figure.draw
+    else
+      @finish.score = @status.score
+      @finish.draw
+    end
   end
 
   def update
@@ -53,16 +61,15 @@ class Game < Window
 
   def its_over!
     @playing = false
-    puts "Game Over!"
   end
 
   def button_down(button)
     case @controls.command_for(button)
-      when :drop       then @figure.drop
-      when :left       then @figure.move_left
-      when :right      then @figure.move_right
-      when :turn_left  then @figure.turn_left
-      when :turn_right then @figure.turn_right
+      when :drop       then @figure.drop        if @playing
+      when :left       then @figure.move_left   if @playing
+      when :right      then @figure.move_right  if @playing
+      when :turn_left  then @figure.turn_left   if @playing
+      when :turn_right then @figure.turn_right  if @playing
       when :reset      then reset!
       when :quit       then close
     end
