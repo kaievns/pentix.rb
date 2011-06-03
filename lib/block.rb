@@ -7,9 +7,10 @@ class Block
   attr_accessor :color, :size
 
   SIZE = 20 # block size in pixels
+  FILE = File.join(File.dirname(__FILE__), '..', 'media', 'block.png')
 
   def initialize(window, color)
-    @@img ||= Image.new(window, 'media/block.png', true)
+    @@img ||= Image.new(window, FILE, true)
     @color = color
   end
 

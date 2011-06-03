@@ -2,7 +2,7 @@
 # A little wrapper to handle hiscore records
 #
 class Records < Array
-  FILENAME = ENV['HOME'] + "/.pentix" # TODO win32
+  FILENAME = File.join(ENV['HOME'] || ENV['USERPROFILE'], ".pentix")
 
   def self.new
     @@instance ||= super # no need to bother HDD all the time
