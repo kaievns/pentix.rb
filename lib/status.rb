@@ -58,7 +58,7 @@ class Status
     # the next levelup lines num
     @levelup = LEVELUP
 
-    @records = Records.new.top(6)
+    @records = Records.top(6)
   end
 
   def count_drop(figure)

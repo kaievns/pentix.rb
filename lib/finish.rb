@@ -4,8 +4,6 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Finish
-  attr_accessor :score, :records
-
   WIDTH     = 27
   HEIGHT    = 27
 
@@ -15,22 +13,22 @@ class Finish
   HEAD_FONT = ['Courier',     Block::SIZE + 5, Color::GRAY].freeze
   TEXT_FONT = ['Courier New', Block::SIZE, Color::GRAY].freeze
 
+  X_OFFSET  = 3.5 * Block::SIZE
+
   #
   # Basic constructor
   #
-  def initialize(window, x, y)
+  def initialize(window)
     @window = window
     @block  = Block.new(window, BG_COLOR)
-
-    @pos_x  = x
-    @pos_y  = y
 
     @over_font  = Font.new(window, OVER_FONT[0], OVER_FONT[1])
     @head_font  = Font.new(window, HEAD_FONT[0], HEAD_FONT[1])
     @text_font  = Font.new(window, TEXT_FONT[0], TEXT_FONT[1])
 
-    @score      = 0
-    @hiscores   = []
+    @text_input = TextInput.new
+
+    reset!
   end
 
   def draw
@@ -42,29 +40,46 @@ class Finish
     end
 
     @over_font.draw("GAME OVAR!",
-      3.5 * Block::SIZE, 2 * Block::SIZE,
+      X_OFFSET, 2 * Block::SIZE,
       0, 1.0, 1.0, OVER_FONT[2])
 
-    @head_font.draw("Your score: #{@score}",
-      3.5 * Block::SIZE, 7 * Block::SIZE,
+    @head_font.draw("Hiscores: ",
+      X_OFFSET, 7 * Block::SIZE,
       0, 1.0, 1.0, HEAD_FONT[2])
 
-    @head_font.draw("Hiscores: ",
-      3.5 * Block::SIZE, 9 * Block::SIZE,
-      0, 1.0, 1.0, HEAD_FONT[2])
+    score = @score.to_s
+    text  = @text_input.text.slice(0, 32) + (@window.text_input == @text_input ? '_' : '')
+    @text_font.draw(
+      text.ljust(43 - score.size, '.') + score,
+      X_OFFSET, 9 * Block::SIZE, 0, 1.0, 1.0, TEXT_FONT[2])
 
     @hiscores.each_with_index do |record, i|
       score  = record[1].to_s
 
       @text_font.draw(
         record[0].ljust(43 - score.size, '.') + score,
-        3.5 * Block::SIZE, (11 + i) * Block::SIZE,
+        X_OFFSET, (10 + i) * Block::SIZE,
         0, 1.0, 1.0, TEXT_FONT[2])
     end
   end
 
-  def records=(list)
-    @records  = list
-    @hiscores = list.top(13)
+  def score=(score)
+    @score    = score
+    @hiscores = Records.top(14)
+    @window.text_input = @text_input
+  end
+
+  def reset!
+    @score    = 0
+    @hiscores = []
+    @window.text_input = nil
+  end
+
+  def enter!
+    name = @text_input.text.strip
+    unless name == ''
+      Records.add(name, @score)
+      @window.text_input = nil
+    end
   end
 end

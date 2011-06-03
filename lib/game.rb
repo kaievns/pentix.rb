@@ -16,10 +16,8 @@ class Game < Window
     @glass    = Glass.new(self,   1, 1)
     @status   = Status.new(self, 16, 1)
 
-    @controls = Controls.new
-
-    @finish   = Finish.new(self, 0, 0)
-
+    @controls = Controls.new     # keybindings
+    @finish   = Finish.new(self) # the gameover screen
 
     reset!
   end
@@ -47,6 +45,7 @@ class Game < Window
   def reset!
     @status.reset!
     @glass.reset!
+    @finish.reset!
 
     show_next_figure
 
@@ -59,8 +58,7 @@ class Game < Window
   end
 
   def its_over!
-    @finish.score   = @status.score
-    @finish.records = Records.new
+    @finish.score = @status.score
     @playing = false
   end
 
@@ -73,6 +71,8 @@ class Game < Window
       when :turn_right then @figure.turn_right  if @playing
       when :reset      then reset!
       when :quit       then close
+      else
+        @finish.enter! if button == Button::KbReturn
     end
   end
 
