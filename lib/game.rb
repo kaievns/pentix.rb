@@ -30,7 +30,6 @@ class Game < Window
       @status.draw
       @figure.draw
     else
-      @finish.score = @status.score
       @finish.draw
     end
   end
@@ -60,6 +59,8 @@ class Game < Window
   end
 
   def its_over!
+    @finish.score   = @status.score
+    @finish.records = Records.new
     @playing = false
   end
 

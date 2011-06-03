@@ -4,7 +4,7 @@
 # Copyright (C) 2011 Nikolay Nemshilov
 #
 class Finish
-  attr_accessor :score
+  attr_accessor :score, :records
 
   WIDTH     = 27
   HEIGHT    = 27
@@ -30,11 +30,7 @@ class Finish
     @text_font  = Font.new(window, TEXT_FONT[0], TEXT_FONT[1])
 
     @score      = 0
-    @records    = [
-      ["Boo hoo!",  12345],
-      ["Trololo",    2345],
-      ["Bla bla bla", 345]
-    ]
+    @hiscores   = []
   end
 
   def draw
@@ -53,17 +49,22 @@ class Finish
       3.5 * Block::SIZE, 7 * Block::SIZE,
       0, 1.0, 1.0, HEAD_FONT[2])
 
-    @head_font.draw("Records: ",
+    @head_font.draw("Hiscores: ",
       3.5 * Block::SIZE, 9 * Block::SIZE,
       0, 1.0, 1.0, HEAD_FONT[2])
 
-    @records.each_with_index do |record, i|
+    @hiscores.each_with_index do |record, i|
       score  = record[1].to_s
 
       @text_font.draw(
-        record[0].ljust(40 - score.size, '.') + score,
+        record[0].ljust(43 - score.size, '.') + score,
         3.5 * Block::SIZE, (11 + i) * Block::SIZE,
         0, 1.0, 1.0, TEXT_FONT[2])
     end
+  end
+
+  def records=(list)
+    @records  = list
+    @hiscores = list.top(13)
   end
 end

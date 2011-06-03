@@ -44,9 +44,9 @@ class Status
     draw_text "Figures",  @figures, 13
 
     draw_head "Winnars:",           18
-    draw_text "Boo hoo!",    10000, 19
-    draw_text "Trololo",    999999, 20
-    draw_text "Bla bla bla", 44444, 21
+    @records.each_with_index do |entry, i|
+      draw_text entry[0], entry[1], 19 + i
+    end
   end
 
   def reset!
@@ -57,6 +57,8 @@ class Status
 
     # the next levelup lines num
     @levelup = LEVELUP
+
+    @records = Records.new.top(6)
   end
 
   def count_drop(figure)
@@ -96,6 +98,7 @@ private
   #
   def draw_text(text, value, pos)
     value = "..#{value}"
+    text  = text.slice(0, TEXT_WIDTH - value.size)
 
     @text_font.draw(
       text.ljust(TEXT_WIDTH - value.size, '.') + value,
