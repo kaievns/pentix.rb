@@ -12,6 +12,13 @@ least level 15 in this game :)
 You'll need `Ruby` and `gem install gosu`, after that just run
 the `pentix.rb` file in the console
 
+You also can install the `pentix` gem
+
+    gem install pentix
+    pentix
+
+
+
 
 ## The Purpose
 
