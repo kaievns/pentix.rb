@@ -51,7 +51,7 @@ class Finish
     text  = @text_input.text.slice(0, 32) + (@window.text_input == @text_input ? '_' : '')
     @text_font.draw(
       text.ljust(43 - score.size, '.') + score,
-      X_OFFSET, 9 * Block::SIZE, 0, 1.0, 1.0, TEXT_FONT[2])
+      X_OFFSET, 9 * Block::SIZE, 0, 1.0, 1.0, Color::WHITE)
 
     @hiscores.each_with_index do |record, i|
       score  = record[1].to_s
