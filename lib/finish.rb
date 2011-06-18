@@ -66,6 +66,7 @@ class Finish
   def score=(score)
     @score    = score
     @hiscores = Records.top(14)
+    @text_input.text   = Records.last_name if @text_input.text == ''
     @window.text_input = @text_input
   end
 

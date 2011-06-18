@@ -18,12 +18,16 @@ class Records < Array
     list.save
   end
 
+  def self.last_name
+    self.new.last_name
+  end
+
   def initialize(*args)
     super *args
 
     File.read(FILENAME).split("\n").each do |line|
       if match = line.match(/^\s*(.*?)\s+(\d+)\s*$/)
-        self << [match[1].strip, match[2].to_i]
+        self << [@last_name = match[1].strip, match[2].to_i]
       end
     end if File.exists?(FILENAME)
   end
@@ -36,5 +40,9 @@ class Records < Array
         end
       end
     end
+  end
+
+  def last_name
+    @last_name || ''
   end
 end
