@@ -82,8 +82,8 @@ class Glass
       distance = HEIGHT - lowest_point
 
       # checking if it interescts with any existing blocks
-      @matrix.each_with_index do |row, y|
-        if nil != row[x]
+      (lowest_point..HEIGHT-1).each do |y|
+        if @matrix[y][x] != nil
           distance = y - lowest_point
           break
         end

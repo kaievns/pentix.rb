@@ -132,6 +132,22 @@ describe Glass do
           @figure.size_y - @stack_height - @figure.pos_y + @glass.pos_y
       end
     end
+
+    describe "inside of an enclosed structure" do
+      before do
+        Glass::WIDTH.times do |x|
+          @glass.matrix[Glass::HEIGHT - 9][x] = Color::WHITE # the top row
+          @glass.matrix[Glass::HEIGHT - 1][x] = Color::WHITE # the bottom row
+        end
+
+        @figure.pos_x = 2
+        @figure.pos_y = Glass::HEIGHT - 6
+      end
+
+      it "should calculate the distance correctly" do
+        @glass.spaces_below(@figure).should == Glass::HEIGHT - @figure.pos_y - @figure.size_x - 1
+      end
+    end
   end
 
   describe "#glue_in" do
@@ -250,6 +266,48 @@ describe Glass do
           | .x.x.x.x. . . . . . . |
           | .x. . . . . . . . . . |
           | .x. . . . . . . . . . |
+        })
+      end
+    end
+
+    describe "with enclosed blocks structure in the glass" do
+      before do
+        (Glass::WIDTH - 2).times do |x|
+          @glass.matrix[Glass::HEIGHT - 9][x] = Color::WHITE # the top row
+          @glass.matrix[Glass::HEIGHT - 1][x] = Color::WHITE # the bottom row
+        end
+
+        @figure.move_to(@glass.pos_x + 3, @glass.pos_y + Glass::HEIGHT - 6)
+      end
+
+      it "should glue the figure inside of the structure" do
+        @glass.glue_in(@figure)
+
+        @glass.should have_matrix(%Q{
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          |x.x.x.x.x.x.x.x.x.x. . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . . . . . . . . . . . |
+          | . .x. . . . . . . . . |
+          | . .x.x. . . . . . . . |
+          | . . .x.x. . . . . . . |
+          |x.x.x.x.x.x.x.x.x.x. . |
         })
       end
     end
